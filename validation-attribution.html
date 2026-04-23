@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pre-submit validation attribution</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    form { padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    p { margin: 0.5rem 0; }
+    input, textarea { width: 100%; max-width: 320px; box-sizing: border-box; padding: 6px; }
+    .invalid-feedback {
+      display: none;
+      color: #b30000;
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+    input:invalid:not(:placeholder-shown) + .invalid-feedback {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pre-submit validation attribution</h1>
+  <p>The form below has three fields with restrictive HTML5 validation.
+     When the scanner fills them with generic synthetic values they trip
+     <code>:invalid</code> state:</p>
+  <ul>
+    <li><code>phone</code>: <code>pattern="\d{10}"</code> — rejects anything with
+        non-digits or wrong length.</li>
+    <li><code>age</code>: <code>type="number" min="18" max="120"</code> — a
+        filler value outside this range triggers <code>rangeOverflow</code> /
+        <code>rangeUnderflow</code>.</li>
+    <li><code>zip</code>: <code>minlength="5"</code> — short values trip
+        <code>tooShort</code>.</li>
+  </ul>
+  <p>Pre-CN-3017 the scanner would emit the generic
+     <em>"The form contains validation errors"</em> blurb. Post-CN-3017 it
+     emits per-field attribution with validity signals + value tried +
+     proximity-error text.</p>
+
+  <form action="/submit" method="post">
+    <p><label>Phone
+      <input type="text" name="phone" pattern="\d{10}" placeholder="10 digits">
+      <span class="invalid-feedback">Please enter exactly 10 digits.</span>
+    </label></p>
+    <p><label>Age
+      <input type="number" name="age" min="18" max="120" placeholder="18-120">
+      <span class="invalid-feedback">Age must be between 18 and 120.</span>
+    </label></p>
+    <p><label>ZIP
+      <input type="text" name="zip" minlength="5" placeholder="5 digits">
+      <span class="invalid-feedback">ZIP must be at least 5 characters.</span>
+    </label></p>
+    <p><button type="submit">Send</button></p>
+  </form>
+</body>
+</html>

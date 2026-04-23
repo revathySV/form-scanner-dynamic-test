@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Honeypot-trapped form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    form { padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    p { margin: 0.5rem 0; }
+    input, textarea { width: 100%; max-width: 320px; box-sizing: border-box; padding: 6px; }
+    /* Classic off-screen honeypot style — invisible to humans, visible to
+       naive scanners that just iterate over <input>s. */
+    .hp-trap {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Honeypot-trapped contact form</h1>
+  <p>The form below includes a hidden <code>&lt;input name="website"&gt;</code>
+     positioned off-screen — a classic anti-spam honeypot. Humans don't
+     see it. Pre-CN-3017 the scanner would fill it (because it's an
+     <code>&lt;input&gt;</code>) and the server would silently mark the
+     submission as spam. Post-CN-3017 the scanner matches the suspicious
+     name + hidden visibility and skips the field, logging it in
+     <code>honeypotsSkipped[]</code>.</p>
+
+  <form action="/submit" method="post">
+    <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+    <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+    <p><label>Message <textarea name="message" placeholder="Your message"></textarea></label></p>
+
+    <!-- ⚠️ Honeypot trap — invisible to humans, looks like a legit field to
+         a naive scanner. Real anti-spam setups on WordPress / CF7 /
+         Akismet commonly deploy this pattern. -->
+    <div class="hp-trap" aria-hidden="true">
+      <label>Website (leave blank)
+        <input type="text" name="website" tabindex="-1" autocomplete="off">
+      </label>
+    </div>
+
+    <p><button type="submit">Send</button></p>
+  </form>
+</body>
+</html>

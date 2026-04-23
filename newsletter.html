@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Newsletter subscribe form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 4rem auto; padding: 0 1rem; text-align: center; }
+    form { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+    input { flex: 1; padding: 8px; box-sizing: border-box; }
+    button { padding: 8px 16px; }
+  </style>
+</head>
+<body>
+  <h1>Join our newsletter</h1>
+  <p>Subscribe for updates about the Form Checker reliability roadmap.</p>
+  <!-- Classic newsletter form: one email field, generic submit button.
+       Pre-CN-3017 the worker would submit, get redirected to /thanks.html
+       which doesn't contain "thank you" / "success" / ... in its body,
+       and mark the form as a submit failure. Post-CN-3017 the worker
+       classifies this as formClass='newsletter' and treats a URL change
+       as sufficient success. -->
+  <form action="./thanks-plain.html" method="get">
+    <input type="text" name="email" placeholder="Email address" required>
+    <button type="submit">Subscribe</button>
+  </form>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>CN-3064 Dynamic Form Discovery — Test Fixtures</title>
+  <title>Form Scanner Test Fixtures — CN-3024 / CN-3064 / CN-3017</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #222; }
     h1 { font-size: 1.5rem; }
@@ -45,6 +45,26 @@
       <div class="meta">3-step wizard with <code>role="progressbar"</code> + <code>aria-valuenow</code> + "Step N of M" text. Before: 1 form (step 1). After: 3 forms linked by <code>parentFormHash</code>, each tagged <code>multi_step_child</code>.</div>
     </li>
   </ul>
-  <p class="meta">Contract: <code>central-scanner-worker docs/contracts/dynamic-form-discovery-v1.md</code>.</p>
+
+  <h2 style="margin-top: 2rem; font-size: 1.2rem;">CN-3017 — Form reliability / false-positive reduction</h2>
+  <ul>
+    <li>
+      <a href="./captcha.html">captcha.html</a>
+      <div class="meta">Form gated by a simulated reCAPTCHA widget (<code>.g-recaptcha</code> + <code>[data-sitekey]</code>). Before: <code>status: "submit_failed"</code>. After: <code>status: "submit_skipped"</code>, <code>submitSkipReason: "captcha_gated"</code>.</div>
+    </li>
+    <li>
+      <a href="./honeypot.html">honeypot.html</a>
+      <div class="meta">Contact form with an off-screen <code>&lt;input name="website"&gt;</code> trap. Before: scanner fills it → server marks spam. After: field skipped + logged in <code>honeypotsSkipped[]</code>.</div>
+    </li>
+    <li>
+      <a href="./newsletter.html">newsletter.html</a>
+      <div class="meta">Single-email subscribe form that redirects to a thank-you page with no strict success words. Before: <code>submit_failed</code>. After: <code>formClass: "newsletter"</code>, <code>submitSuccessSignal: "newsletter_url_change"</code>.</div>
+    </li>
+    <li>
+      <a href="./validation-attribution.html">validation-attribution.html</a>
+      <div class="meta">Form with strict <code>pattern</code> / <code>min</code> / <code>minlength</code> that trip <code>:invalid</code> on generic filler values. Before: generic "contains validation errors" blurb. After: per-field <code>submitFailureDetails</code> with validity signals + value tried + proximity text.</div>
+    </li>
+  </ul>
+  <p class="meta">Contract refs: <code>form-validation-findings-v1.md</code>, <code>dynamic-form-discovery-v1.md</code>, <code>form-reliability-v1.md</code>.</p>
 </body>
 </html>

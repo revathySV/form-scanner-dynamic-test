@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CAPTCHA-gated form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    form { padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    p { margin: 0.5rem 0; }
+    input, textarea { width: 100%; max-width: 320px; box-sizing: border-box; padding: 6px; }
+    .g-recaptcha-placeholder {
+      margin-top: 1rem; width: 304px; height: 78px;
+      border: 1px solid #d3d3d3; border-radius: 3px;
+      background: linear-gradient(#f9f9f9, #f1f1f1);
+      display: flex; align-items: center; padding: 0 12px;
+      font-size: 0.85rem; color: #555;
+    }
+    .g-recaptcha-placeholder::before {
+      content: ""; display: inline-block; width: 24px; height: 24px;
+      border: 2px solid #888; border-radius: 3px; margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>CAPTCHA-gated contact form</h1>
+  <p>The form below is gated by a simulated reCAPTCHA widget. The
+     <code>.g-recaptcha</code> class and <code>[data-sitekey]</code>
+     attribute match the worker's CAPTCHA detector. Before CN-3017 the
+     scanner would fill and submit, the submit would deterministically
+     fail, and the form would be reported as a submit failure. After
+     CN-3017 the scanner detects the gate up-front and emits
+     <code>submitSkipReason: "captcha_gated"</code> with status
+     <code>submit_skipped</code> — not a failure.</p>
+
+  <form action="/submit" method="post">
+    <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+    <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+    <p><label>Message <textarea name="message" placeholder="Your message"></textarea></label></p>
+    <!-- Simulated reCAPTCHA — styled to look like the real widget. The
+         class and data-sitekey below match the detector selectors. -->
+    <div class="g-recaptcha-placeholder g-recaptcha"
+         data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI">
+      I'm not a robot (simulated reCAPTCHA)
+    </div>
+    <p><button type="submit">Send</button></p>
+  </form>
+</body>
+</html>
