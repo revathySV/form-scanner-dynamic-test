@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Strict-pattern validation — guaranteed to fail filler</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    form { padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    p { margin: 0.5rem 0; }
+    input { width: 100%; max-width: 320px; box-sizing: border-box; padding: 6px; }
+    .invalid-feedback { display: none; color: #b30000; font-size: 0.85rem; margin-top: 2px; }
+    input:invalid:not(:placeholder-shown) + .invalid-feedback { display: block; }
+  </style>
+</head>
+<body>
+  <h1>Strict-pattern form (guaranteed pre-submit validation failure)</h1>
+  <p>The three fields below have constraints <em>no</em> auto-filler can
+     plausibly satisfy, so the scanner's generated values will reliably
+     trip <code>:invalid</code> and produce a pre-submit failure with
+     three per-field entries.</p>
+  <ul>
+    <li><code>access_code</code>: <code>pattern="PROOF-\d{5}"</code> — must be the literal prefix <code>PROOF-</code> + 5 digits. Generic filler values never start with <code>PROOF-</code>.</li>
+    <li><code>big_number</code>: <code>type="number" min="50000" max="99999"</code> — filler typically produces small integers.</li>
+    <li><code>long_field</code>: <code>minlength="64"</code> — filler produces short values like "Test Input".</li>
+  </ul>
+
+  <form action="/submit" method="post">
+    <p><label>Access code
+      <input type="text" name="access_code" pattern="PROOF-\d{5}" placeholder="PROOF-#####" required>
+      <span class="invalid-feedback">Expected format: PROOF-##### (example: PROOF-01234).</span>
+    </label></p>
+    <p><label>Big number
+      <input type="number" name="big_number" min="50000" max="99999" placeholder="50000-99999" required>
+      <span class="invalid-feedback">Value must be between 50,000 and 99,999.</span>
+    </label></p>
+    <p><label>Long description
+      <input type="text" name="long_field" minlength="64" placeholder="At least 64 characters" required>
+      <span class="invalid-feedback">Must be at least 64 characters.</span>
+    </label></p>
+    <p><button type="submit">Send</button></p>
+  </form>
+</body>
+</html>

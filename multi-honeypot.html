@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Multi-honeypot form — visible delta in honeypotsSkipped</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    form { padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    p { margin: 0.5rem 0; }
+    input, textarea { width: 100%; max-width: 320px; box-sizing: border-box; padding: 6px; }
+    /* Honeypot #1: classic off-screen */
+    .hp-offscreen { position: absolute; left: -9999px; top: -9999px; width: 0; height: 0; opacity: 0; }
+    /* Honeypot #2: display:none on the parent */
+    .hp-displaynone { display: none; }
+    /* Honeypot #3: zero-opacity overlay */
+    .hp-invisible { opacity: 0; pointer-events: none; position: absolute; }
+  </style>
+</head>
+<body>
+  <h1>Multi-honeypot form</h1>
+  <p>This form has <strong>three</strong> honeypot fields using three
+     different hiding techniques, plus a real email/message pair. Before
+     CN-3017 the scanner would try to fill all six fields (or just silently
+     fail to find the hidden ones). After CN-3017,
+     <code>honeypotsSkipped[]</code> contains three entries — one for each
+     trap — and only the real fields are filled.</p>
+
+  <form action="/submit" method="post">
+    <p><label>Email <input type="text" name="email" placeholder="Email address" required></label></p>
+    <p><label>Message <textarea name="message" placeholder="Your message" required></textarea></label></p>
+
+    <!-- Trap #1: off-screen, suspicious name "website" -->
+    <div class="hp-offscreen" aria-hidden="true">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <!-- Trap #2: display:none parent, name "url" -->
+    <div class="hp-displaynone" aria-hidden="true">
+      <label>URL <input type="text" name="url" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <!-- Trap #3: opacity 0, name "confirm_email" — a common CF7 / Akismet pattern -->
+    <div class="hp-invisible" aria-hidden="true">
+      <label>Confirm email <input type="text" name="confirm_email" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <p><button type="submit">Send</button></p>
+  </form>
+</body>
+</html>

@@ -62,7 +62,19 @@
     </li>
     <li>
       <a href="./validation-attribution.html">validation-attribution.html</a>
-      <div class="meta">Form with strict <code>pattern</code> / <code>min</code> / <code>minlength</code> that trip <code>:invalid</code> on generic filler values. Before: generic "contains validation errors" blurb. After: per-field <code>submitFailureDetails</code> with validity signals + value tried + proximity text.</div>
+      <div class="meta">Form with strict <code>pattern</code> / <code>min</code> / <code>minlength</code> that trip <code>:invalid</code> on generic filler values. Before: generic "contains validation errors" blurb. After: per-field <code>submitFailureDetails</code> with validity signals + value tried + proximity text. <em>Delta depends on filler output — see strict-pattern.html for a guaranteed variant.</em></div>
+    </li>
+    <li>
+      <a href="./strict-pattern.html">strict-pattern.html</a>
+      <div class="meta"><strong>Guaranteed pre-submit failure</strong>: constraints no plausible filler output satisfies (<code>PROOF-\d{5}</code>, min=50000, minlength=64). Before: generic blurb. After: three per-field entries in <code>submitFailureDetails.invalidFields</code>.</div>
+    </li>
+    <li>
+      <a href="./multi-honeypot.html">multi-honeypot.html</a>
+      <div class="meta">Three different honeypot hiding techniques (off-screen, display:none parent, zero-opacity) alongside a legit email/message pair. After: <code>honeypotsSkipped[]</code> has three entries. Status-level passes on both branches — delta lives entirely in the array.</div>
+    </li>
+    <li>
+      <a href="./newsletter-minimal-thanks.html">newsletter-minimal-thanks.html</a>
+      <div class="meta">Newsletter-style form that redirects to a destination page containing <strong>zero</strong> strict success words (&quot;All set. You can close this tab.&quot;). Before: <code>submit_failed</code>. After: <code>formClass: "newsletter"</code> + <code>submitSuccessSignal: "newsletter_url_change"</code> → UI flips red X → green ✓.</div>
     </li>
   </ul>
   <p class="meta">Contract refs: <code>form-validation-findings-v1.md</code>, <code>dynamic-form-discovery-v1.md</code>, <code>form-reliability-v1.md</code>.</p>

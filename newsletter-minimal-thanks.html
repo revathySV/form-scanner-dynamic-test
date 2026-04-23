@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Newsletter form (stricter variant)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 4rem auto; padding: 0 1rem; text-align: center; }
+    form { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+    input { flex: 1; padding: 8px; box-sizing: border-box; }
+    button { padding: 8px 16px; }
+  </style>
+</head>
+<body>
+  <h1>Stay in the loop</h1>
+  <p>Updates, one email a month.</p>
+  <!-- Same shape as newsletter.html but redirects to a destination page
+       whose content and title are guaranteed to contain zero strict
+       success indicators. Before CN-3017 the scanner reports submit_failed
+       because the word list doesn't match. After CN-3017 the newsletter
+       classifier + URL change declares success. -->
+  <form action="./newsletter-done.html" method="get">
+    <input type="text" name="email" placeholder="Your e-mail" required>
+    <button type="submit">Join</button>
+  </form>
+</body>
+</html>
