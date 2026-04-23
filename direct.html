@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Direct form — regression guard</title>
+</head>
+<body>
+  <h1>Direct form</h1>
+  <p>Regression guard. This page has a single plain HTML form visible on load.
+     CN-3064 should emit exactly one form record with <code>discoveryMethod: "direct"</code>
+     — identical to the pre-CN-3064 behavior.</p>
+
+  <form action="/submit" method="post">
+    <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+    <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+    <p><label>Phone <input type="text" name="phone" placeholder="Phone number"></label></p>
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>

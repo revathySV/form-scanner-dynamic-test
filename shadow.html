@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Shadow DOM form</title>
+</head>
+<body>
+  <h1>Shadow DOM form</h1>
+  <p>The form below lives inside <code>&lt;my-contact-form&gt;</code> with
+     <code>attachShadow({mode: "open"})</code>. Pre-CN-3064,
+     <code>document.querySelectorAll("form")</code> cannot pierce shadow roots
+     and the scanner sees zero forms. Post-CN-3064, the shadow walker finds
+     it and emits <code>discoveryMethod: "shadow_dom"</code> with
+     <code>shadowHostSelector: "my-contact-form"</code>.</p>
+
+  <my-contact-form></my-contact-form>
+
+  <script>
+    class MyContactForm extends HTMLElement {
+      connectedCallback() {
+        const root = this.attachShadow({ mode: 'open' });
+        root.innerHTML = `
+          <style>
+            form { padding: 1rem; border: 1px solid #ccc; border-radius: 8px; max-width: 320px; }
+            p { margin: 0.5rem 0; }
+            input { width: 100%; box-sizing: border-box; padding: 6px; }
+          </style>
+          <form action="/submit" method="post">
+            <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+            <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+            <p><label>Phone <input type="text" name="phone" placeholder="Phone number"></label></p>
+            <button type="submit">Send</button>
+          </form>
+        `;
+      }
+    }
+    customElements.define('my-contact-form', MyContactForm);
+  </script>
+</body>
+</html>

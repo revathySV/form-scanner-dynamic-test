@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SPA route-revealed form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    nav button { background: none; border: 0; color: #0057b7; font: inherit; font-weight: 600; cursor: pointer; padding: 0.5rem 0.75rem; margin-right: 0.5rem; }
+    nav button:hover { text-decoration: underline; }
+    #view { margin-top: 1.5rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    form { margin-top: 1rem; }
+    p { margin: 0.5rem 0; }
+    input { width: 100%; max-width: 300px; box-sizing: border-box; padding: 6px; }
+  </style>
+</head>
+<body>
+  <h1>SPA route — contact form behind client-side route</h1>
+  <p>The "Contact" button below uses <code>history.pushState</code> to change
+     the URL without a full navigation. The form only renders after the
+     route change fires. Pre-CN-3064 the scanner's
+     <code>waitForNavigation</code> times out and the form is missed.
+     Post-CN-3064 the <code>pushState</code> hook catches the route change
+     and emits the form with <code>discoveryMethod: "spa_route"</code>.</p>
+
+  <nav>
+    <button id="home-btn">Home</button>
+    <button id="contact-btn">Contact</button>
+  </nav>
+
+  <div id="view">
+    <p>Welcome. Click Contact to see our contact form.</p>
+  </div>
+
+  <script>
+    const view = document.getElementById('view');
+    function renderHome() {
+      view.innerHTML = '<p>Welcome. Click Contact to see our contact form.</p>';
+    }
+    function renderContact() {
+      view.innerHTML = `
+        <h2>Contact</h2>
+        <form action="/submit" method="post">
+          <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+          <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+          <p><label>Phone <input type="text" name="phone" placeholder="Phone number"></label></p>
+          <button type="submit">Send</button>
+        </form>`;
+    }
+    document.getElementById('home-btn').addEventListener('click', () => {
+      history.pushState({ view: 'home' }, '', '#home');
+      renderHome();
+    });
+    document.getElementById('contact-btn').addEventListener('click', () => {
+      history.pushState({ view: 'contact' }, '', '#contact');
+      // Simulate async render (real SPAs often fetch lazy routes).
+      setTimeout(renderContact, 250);
+    });
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.view === 'contact') renderContact();
+      else renderHome();
+    });
+  </script>
+</body>
+</html>

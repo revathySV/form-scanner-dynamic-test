@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tab-revealed form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    .tablist { display: flex; gap: 0; border-bottom: 1px solid #ccc; }
+    .tab { padding: 0.5rem 1rem; cursor: pointer; background: none; border: 0; border-bottom: 2px solid transparent; font: inherit; }
+    .tab[aria-selected="true"] { border-bottom-color: #0057b7; font-weight: 600; }
+    .panel { padding: 1rem 0; }
+    .panel[hidden] { display: none; }
+    form { padding: 1rem; background: #fafafa; border-radius: 6px; }
+    p { margin: 0.5rem 0; }
+    input { width: 100%; max-width: 300px; box-sizing: border-box; padding: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Tab-revealed form</h1>
+  <p>Two tabs. Tab 1 "Overview" shows plain text. Tab 2 "Contact" contains a
+     form, but the panel is <code>hidden</code> on load. Pre-CN-3064 the
+     scanner sees the form as not-visible and filters it out. Post-CN-3064 the
+     tab pass clicks <code>[role="tab"]</code> elements and reveals the
+     form with <code>discoveryMethod: "tab_reveal"</code>.</p>
+
+  <div class="tablist" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">Overview</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2">Contact</button>
+  </div>
+
+  <div id="panel-1" class="panel" role="tabpanel" aria-labelledby="tab-1">
+    <p>Welcome. Click the Contact tab to get in touch.</p>
+  </div>
+  <div id="panel-2" class="panel" role="tabpanel" aria-labelledby="tab-2" hidden>
+    <form action="/submit" method="post">
+      <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+      <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+      <p><label>Phone <input type="text" name="phone" placeholder="Phone number"></label></p>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('[role="tab"]');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.setAttribute('aria-selected', 'false');
+          document.getElementById(t.getAttribute('aria-controls')).hidden = true;
+        });
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.getAttribute('aria-controls')).hidden = false;
+      });
+    });
+  </script>
+</body>
+</html>

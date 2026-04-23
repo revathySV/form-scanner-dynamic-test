@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CN-3064 Dynamic Form Discovery — Test Fixtures</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #222; }
+    h1 { font-size: 1.5rem; }
+    ul { padding: 0; list-style: none; }
+    li { margin: 0.5rem 0; padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 8px; }
+    a { color: #0057b7; font-weight: 600; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .meta { color: #666; font-size: 0.9rem; margin-top: 0.25rem; }
+    code { background: #f4f4f4; padding: 0 4px; border-radius: 3px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>CN-3064 dynamic form discovery — test fixtures</h1>
+  <p>Each page below exercises exactly one code path in the central-scanner-worker
+     form scanner. Scan each URL from Automate and compare output against the
+     <code>main</code> branch to see the before/after delta.</p>
+  <ul>
+    <li>
+      <a href="./direct.html">direct.html</a>
+      <div class="meta">Plain HTML form. Regression guard — should produce identical output on both branches. Expected <code>discoveryMethod: "direct"</code>.</div>
+    </li>
+    <li>
+      <a href="./shadow.html">shadow.html</a>
+      <div class="meta">Form inside an open shadow root. Before CN-3064: 0 forms found. After: 1 form with <code>discoveryMethod: "shadow_dom"</code>.</div>
+    </li>
+    <li>
+      <a href="./accordion.html">accordion.html</a>
+      <div class="meta">Form inside a collapsed <code>&lt;details&gt;</code> element. Before: 0 forms found. After: 1 form with <code>discoveryMethod: "accordion_reveal"</code>.</div>
+    </li>
+    <li>
+      <a href="./tabs.html">tabs.html</a>
+      <div class="meta">Form inside an inactive <code>[role="tab"]</code> panel. Before: form hidden, not scanned. After: 1 form with <code>discoveryMethod: "tab_reveal"</code>.</div>
+    </li>
+    <li>
+      <a href="./spa.html">spa.html</a>
+      <div class="meta">Form that only renders after a <code>history.pushState</code> click. Before: soft nav missed. After: <code>discoveryMethod: "spa_route"</code>.</div>
+    </li>
+    <li>
+      <a href="./wizard.html">wizard.html</a>
+      <div class="meta">3-step wizard with <code>role="progressbar"</code> + <code>aria-valuenow</code> + "Step N of M" text. Before: 1 form (step 1). After: 3 forms linked by <code>parentFormHash</code>, each tagged <code>multi_step_child</code>.</div>
+    </li>
+  </ul>
+  <p class="meta">Contract: <code>central-scanner-worker docs/contracts/dynamic-form-discovery-v1.md</code>.</p>
+</body>
+</html>

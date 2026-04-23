@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Accordion-revealed form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    details { border: 1px solid #ccc; border-radius: 8px; padding: 0.75rem 1rem; }
+    summary { cursor: pointer; font-weight: 600; }
+    form { margin-top: 1rem; padding: 1rem; background: #fafafa; border-radius: 6px; }
+    p { margin: 0.5rem 0; }
+    input { width: 100%; box-sizing: border-box; padding: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Accordion form</h1>
+  <p>The form is wrapped in a <code>&lt;details&gt;</code> element. Collapsed by
+     default, its contents are hidden. Pre-CN-3064 the scanner skips it as
+     not-visible. Post-CN-3064 the accordion pass clicks the
+     <code>&lt;summary&gt;</code> trigger and finds the form with
+     <code>discoveryMethod: "accordion_reveal"</code>.</p>
+
+  <details>
+    <summary>Contact us</summary>
+    <form action="/submit" method="post">
+      <p><label>Name <input type="text" name="name" placeholder="Full name"></label></p>
+      <p><label>Email <input type="text" name="email" placeholder="Email address"></label></p>
+      <p><label>Phone <input type="text" name="phone" placeholder="Phone number"></label></p>
+      <button type="submit">Send</button>
+    </form>
+  </details>
+</body>
+</html>
